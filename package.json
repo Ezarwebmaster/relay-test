@@ -1,0 +1,8 @@
+{
+  "name": "relay-bugfix",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-reporter=tap test/cart.test.js"
+  }
+}

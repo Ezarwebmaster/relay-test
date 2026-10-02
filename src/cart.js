@@ -9,11 +9,11 @@ export function applyDiscount(total, percent) {
 }
 
 export function formatPrice(cents) {
-  return `$${cents / 100}`
+  return `$${(cents / 100).toFixed(2)}`
 }
 
 export function isValidCoupon(code) {
-  return /^[A-Z]{4}\d{2}/.test(code)
+  return /^[A-Z]{4}\d{2}$/.test(code)
 }
 
 export function shipping(subtotalCents) {

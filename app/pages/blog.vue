@@ -1,9 +1,13 @@
 <script setup lang="ts">
 const { data: posts } = await useAsyncData('blog-posts', () => {
-  return queryCollection('content')
-    .where('path', 'startsWith', '/blog/')
-    .order('date', { descending: true })
+  return queryCollection('blog')
+    .order('date', 'DESC')
     .all()
+})
+
+useSeoMeta({
+  title: 'Blog',
+  description: 'Articles on the history of computing, newest first.',
 })
 </script>
 
@@ -11,9 +15,14 @@ const { data: posts } = await useAsyncData('blog-posts', () => {
   <div>
     <h1>Blog</h1>
     <div class="blog-list">
+      <p v-if="!posts?.length">No articles yet.</p>
       <div v-for="post in posts" :key="post.id" class="blog-post">
-        <h2>{{ post.title }}</h2>
-        <p class="meta">Published on {{ new Date(post.date).toLocaleDateString() }}</p>
+        <h2>
+          <NuxtLink :to="post.path">{{ post.title }}</NuxtLink>
+        </h2>
+        <p class="meta">
+          Published on <time :datetime="post.date">{{ formatDate(post.date) }}</time>
+        </p>
         <p class="description">{{ post.description }}</p>
         <NuxtLink :to="post.path">Read more</NuxtLink>
       </div>

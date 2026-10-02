@@ -1,7 +1,7 @@
 // A tiny shopping cart. Prices are in cents; items are { price, qty }.
 
 export function subtotal(items) {
-  return items.reduce((sum, item) => sum + item.price, 0)
+  return items.reduce((sum, item) => sum + item.price * item.qty, 0)
 }
 
 export function applyDiscount(total, percent) {

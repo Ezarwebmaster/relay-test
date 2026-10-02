@@ -5,7 +5,7 @@ export function subtotal(items) {
 }
 
 export function applyDiscount(total, percent) {
-  return Math.round(total - (total * percent) / 10)
+  return Math.round(total - (total * percent) / 100)
 }
 
 export function formatPrice(cents) {

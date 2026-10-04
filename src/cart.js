@@ -8,6 +8,12 @@ export function applyDiscount(total, percent) {
   return Math.round(total - (total * percent) / 100)
 }
 
+/**
+ * Compute sales tax on an amount in cents.
+ * @param {number} cents - amount in cents
+ * @param {number} ratePercent - tax rate as a percentage
+ * @returns {number} tax in cents, rounded to the nearest cent
+ */
 export function tax(cents, ratePercent) {
   return Math.round((cents * ratePercent) / 100)
 }

@@ -32,6 +32,10 @@ test('tax of a zero rate is zero', () => {
   assert.equal(tax(1000, 0), 0)
 })
 
+test('tax at 0% rate leaves the amount untaxed', () => {
+  assert.equal(tax(999, 0), 0)
+})
+
 test('formatPrice always shows two decimals', () => {
   assert.equal(formatPrice(1250), '$12.50')
   assert.equal(formatPrice(700), '$7.00')

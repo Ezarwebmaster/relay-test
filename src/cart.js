@@ -8,6 +8,10 @@ export function applyDiscount(total, percent) {
   return Math.round(total - (total * percent) / 100)
 }
 
+export function tax(cents, ratePercent) {
+  return Math.round((cents * ratePercent) / 100)
+}
+
 export function formatPrice(cents) {
   return `$${(cents / 100).toFixed(2)}`
 }

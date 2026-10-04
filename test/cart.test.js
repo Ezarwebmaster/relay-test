@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { subtotal, applyDiscount, formatPrice, isValidCoupon, shipping, total } from '../src/cart.js'
+import { subtotal, applyDiscount, tax, formatPrice, isValidCoupon, shipping, total } from '../src/cart.js'
 
 test('subtotal multiplies price by quantity', () => {
   assert.equal(subtotal([{ price: 250, qty: 2 }, { price: 100, qty: 3 }]), 800)
@@ -16,6 +16,20 @@ test('applyDiscount takes a percentage', () => {
 
 test('applyDiscount of zero percent changes nothing', () => {
   assert.equal(applyDiscount(1000, 0), 1000)
+})
+
+test('tax takes a percentage of the cents', () => {
+  assert.equal(tax(1000, 10), 100)
+  assert.equal(tax(1250, 8.25), 103)
+})
+
+test('tax is rounded to the cent', () => {
+  assert.equal(tax(1050, 7.5), 79)
+  assert.equal(tax(999, 5), 50)
+})
+
+test('tax of a zero rate is zero', () => {
+  assert.equal(tax(1000, 0), 0)
 })
 
 test('formatPrice always shows two decimals', () => {

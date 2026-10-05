@@ -103,12 +103,16 @@
       color: var(--brun-foncé);
     }
     .panier:hover { color: var(--doré-foncé); }
+    .panier:focus-visible {
+      outline: 2px solid var(--doré);
+      outline-offset: 3px;
+    }
     .badge {
       position: absolute;
       top: -7px;
       right: -12px;
       background: var(--doré);
-      color: var(--blanc);
+      color: var(--brun-foncé);
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.72rem;
       font-weight: 700;
@@ -378,7 +382,7 @@
     .horaires-liste tr { border-bottom: 1px solid #f0e6d8; }
     .horaires-liste th {
       text-align: left;
-      color: var(--doré-foncé);
+      color: #7A4A26;
       font-weight: 700;
       padding: 12px 14px;
     }
@@ -396,7 +400,7 @@
     .adresse p, .horaires p { margin-bottom: 11px; }
     .adresse strong { color: var(--brun-foncé); }
     .contact p { margin-bottom: 7px; }
-    .contact a { color: var(--doré-foncé); font-weight: 600; }
+    .contact a { color: #9A5B24; font-weight: 600; }
     .contact a:hover { text-decoration: underline; }
 
     /* Pied de page */
@@ -430,6 +434,21 @@
     }
     .footer-liens a { color: var(--ambre); font-weight: 600; }
     .footer-liens a:hover { color: var(--blanc); }
+
+    /* Accessibilité : lien « aller au contenu » pour les utilisateurs du clavier */
+    .aller-au-contenu {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--brun-foncé);
+      color: var(--doré);
+      padding: 8px 16px;
+      font-weight: 700;
+      z-index: 1000;
+    }
+    .aller-au-contenu:focus {
+      left: 0;
+    }
 
     /* --- Tablette & mobile --- */
     @media (max-width: 960px) {
@@ -496,6 +515,8 @@
   </style>
 </head>
 <body>
+  <a href="#main-content" class="aller-au-contenu">Aller au contenu principal</a>
+
   <!-- En-tête -->
   <header>
     <div class="container nav-wrapper">
@@ -515,9 +536,10 @@
         </ul>
       </nav>
       <div class="nav-right">
-        <div class="panier" id="panier" aria-label="Panier">
-          Panier <span id="badge" class="badge">0</span>
-        </div>
+        <button id="panier" type="button" aria-label="Panier">
+          Panier
+          <span id="badge" class="badge" aria-live="polite">0</span>
+        </button>
         <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -526,6 +548,7 @@
   </header>
 
   <!-- Section accueil -->
+  <main id="main-content">
   <section id="accueil">
     <div class="container accueil-content">
       <div class="accueil-texte">
@@ -535,7 +558,7 @@
       </div>
       <div class="accueil-illustration">
         <div class="pain-géant" aria-hidden="true">
-          <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="croustillant" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#eebb44"/>
@@ -565,7 +588,7 @@
         <!-- 6 produits -->
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <defs>
                 <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stop-color="#f2c455"/>
@@ -593,7 +616,7 @@
         </article>
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <ellipse cx="40" cy="50" rx="25" ry="19" fill="#eebb44"/>
               <ellipse cx="40" cy="50" rx="25" ry="19" fill="url(#g2)"/>
               <path d="M24 50C24 36 31 28 40 28C49 28 56 36 56 50C56 64 40 72 40 72C40 72 24 64 24 50Z" fill="#eebb44"/>
@@ -614,7 +637,7 @@
         </article>
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M22 54L29 16L40 23L51 16L58 54H22Z" fill="url(#g1)"/>
               <path d="M30 16L40 22.5L50 16" fill="#eebb44"/>
               <path d="M27 28C29 22 34 18 40 18C46 18 51 22 53 28C55 34 54 42 50 48C46 54 40 56 40 56C40 56 34 54 30 48C26 42 25 34 27 28Z" fill="url(#g2)"/>
@@ -635,7 +658,7 @@
         </article>
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <ellipse cx="40" cy="50" rx="19" ry="13" fill="#7a4a14"/>
               <path d="M23 38C23 25 31 18 40 18C49 18 57 25 57 38C57 52 40 60 40 60C40 60 23 52 23 38Z" fill="url(#g2)"/>
               <ellipse cx="40" cy="32" rx="6.5" ry="11" fill="url(#g1)"/>
@@ -655,7 +678,7 @@
         </article>
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <ellipse cx="40" cy="50" rx="22" ry="15" fill="url(#g2)"/>
               <ellipse cx="40" cy="50" rx="22" ry="15" fill="url(#g1)"/>
               <path d="M32 38V28" stroke="#d98e33" stroke-width="4" stroke-linecap="round"/>
@@ -677,7 +700,7 @@
         </article>
         <article class="produit">
           <div class="produit-illustration">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <ellipse cx="40" cy="46" rx="23" ry="16" fill="#eebb44"/>
               <ellipse cx="40" cy="46" rx="23" ry="16" fill="url(#g2)"/>
               <ellipse cx="40" cy="36" rx="15" ry="11" fill="url(#g1)"/>
@@ -706,18 +729,19 @@
       <div class="section-titre">
         <span class="ligné"></span>
         <h2>Horaires & adresse</h2>
-        <p>Passez nous faire une bêtise, on vous attend avec le café chaud.</p>
+        <p>Passez nous faire une brioche, on vous attend avec le café chaud.</p>
       </div>
       <div class="infos-grid">
         <div class="info-carte">
           <div class="info-entete">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"/>
             </svg>
             <h3>Nos horaires</h3>
           </div>
           <table class="horaires-liste">
-            <tr><th>Jour</th><th>Heures</th></tr>
+            <thead><tr><th>Jour</th><th>Heures</th></tr></thead>
+            <tbody>
             <tr><td>Lundi</td><td>Fermé</td></tr>
             <tr><td>Mardi</td><td>06h30 – 19h30</td></tr>
             <tr><td>Mercredi</td><td>06h30 – 19h30</td></tr>
@@ -725,11 +749,12 @@
             <tr><td>Vendredi</td><td>06h30 – 20h00</td></tr>
             <tr><td>Samedi</td><td>07h00 – 19h30</td></tr>
             <tr><td>Dimanche</td><td>07h00 – 13h00</td></tr>
+            </tbody>
           </table>
         </div>
         <div class="info-carte">
           <div class="info-entete">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
             </svg>
             <h3>L'atelier</h3>
@@ -747,6 +772,7 @@
       </div>
     </div>
   </section>
+</main>
 
   <!-- Pied de page -->
   <footer>
@@ -776,14 +802,25 @@
       var links = menu.querySelectorAll('a');
       burger.addEventListener('click', function () {
         var ouvert = menu.getAttribute('ouvert') === 'true';
-        menu.setAttribute('ouvert', !ouvert);
+        menu.setAttribute('ouvert', String(!ouvert));
+        burger.setAttribute('ouvert', String(!ouvert));
         burger.setAttribute('aria-expanded', String(!ouvert));
       });
       links.forEach(function (a) {
         a.addEventListener('click', function () {
           menu.removeAttribute('ouvert');
+          burger.removeAttribute('ouvert');
           burger.setAttribute('aria-expanded', 'false');
         });
+      });
+      // Fermer le menu avec la touche Échap
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          menu.removeAttribute('ouvert');
+          burger.removeAttribute('ouvert');
+          burger.setAttribute('aria-expanded', 'false');
+          burger.focus();
+        }
       });
       var badge = document.getElementById('badge');
       var nb = 0;

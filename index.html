@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Fournée du Coin — Boulangerie artisanale</title>
+  <style>
+    /* Variables & reset */
+    :root {
+      --bleu-foncé: #1f3a52;
+      --bleu-ardoise: #2f5468;
+      --doré: #d98e33;
+      --doré-foncé: #b57222;
+      --crème: #fdf6e7;
+      --blanc: #ffffff;
+      --moutarde: #eebb44;
+      --gris-clair: #8a8a8a;
+      --ombre: 0 8px 24px rgba(31, 58, 82, 0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--bleu-foncé);
+      background: var(--crème);
+      line-height: 1.6;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* En-tête */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--blanc);
+      border-bottom: 2px solid var(--doré);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--bleu-foncé);
+    }
+    .brand svg { width: 34px; height: 34px; }
+    nav ul {
+      display: flex;
+      gap: 26px;
+    }
+    nav a {
+      font-weight: 600;
+      color: var(--bleu-ardoise);
+      transition: color 0.2s, transform 0.2s;
+    }
+    nav a:hover { color: var(--doré-foncé); transform: translateY(-1px); }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .panier {
+      position: relative;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: var(--doré);
+      color: var(--blanc);
+      font-size: 0.75rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .badge.visible { opacity: 1; transform: scale(1); }
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .burger span {
+      width: 22px;
+      height: 2.5px;
+      background: var(--bleu-foncé);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+
+    /* Section accueil */
+    #accueil {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, var(--bleu-foncé) 0%, var(--bleu-ardoise) 100%);
+      color: var(--blanc);
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 60px;
+    }
+    #accueil::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -40px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(217, 142, 51, 0.15);
+    }
+    #accueil::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -60px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: rgba(217, 142, 51, 0.1);
+    }
+    .accueil-content {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .accueil-texte h1 {
+      font-size: 3rem;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .accueil-texte .slogan {
+      font-size: 1.35rem;
+      color: var(--doré);
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--doré);
+      color: var(--blanc);
+      padding: 14px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: var(--doré-foncé);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(217, 142, 51, 0.4);
+    }
+    .accueil-illustration {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .pain-géant {
+      width: 420px;
+      height: 420px;
+    }
+    .pain-géant svg { width: 100%; height: 100%; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.35)); }
+
+    /* Sections génériques */
+    section { padding: 80px 0; }
+    .section-titre {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .section-titre h2 {
+      font-size: 2.2rem;
+      color: var(--bleu-foncé);
+      margin-bottom: 10px;
+    }
+    .section-titre .ligné {
+      display: inline-block;
+      width: 64px;
+      height: 4px;
+      background: var(--doré);
+      border-radius: 2px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .section-titre p { color: var(--gris-clair); font-size: 1.1rem; }
+
+    /* Section produits */
+    #produits { background: var(--blanc); }
+    .produits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    .produit {
+      background: var(--crème);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--ombre);
+      transition: transform 0.25s, box-shadow 0.25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .produit:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 36px rgba(31, 58, 82, 0.16);
+    }
+    .produit-illustration {
+      height: 160px;
+      background: var(--blanc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .produit-illustration svg { width: 100px; height: 100px; }
+    .produit-corps {
+      padding: 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .produit-titre {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--bleu-foncé);
+    }
+    .produit-desc {
+      color: var(--gris-clair);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .produit-prix {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--doré-foncé);
+      margin-bottom: 14px;
+    }
+    .produit .btn {
+      width: 100%;
+      text-align: center;
+      background: var(--bleu-foncé);
+      padding: 11px 20px;
+      font-size: 0.95rem;
+    }
+    .produit .btn:hover { background: var(--bleu-ardoise); box-shadow: 0 8px 20px rgba(47, 84, 104, 0.35); }
+
+    /* Section horaires */
+    #horaires {
+      background: linear-gradient(135deg, #fff7e8 0%, var(--crème) 100%);
+    }
+    .infos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 50px;
+      align-items: start;
+    }
+    .info-carte {
+      background: var(--blanc);
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: var(--ombre);
+    }
+    .info-entete {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .info-entete svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--doré-foncé);
+    }
+    .info-entete h3 { font-size: 1.25rem; color: var(--bleu-foncé); }
+    .info-entete p { color: var(--doré-foncé); font-weight: 700; margin: 0; }
+    .horaires-liste th, .horaires-liste td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    .horaires-liste th { color: var(--doré-foncé); font-weight: 700; }
+    .horaires-liste tr:last-child td { border-bottom: none; }
+    .horaires-liste td:last-child { text-align: right; font-weight: 600; }
+    .adresse p, .horaires p { margin-bottom: 10px; }
+    .contact p { margin-bottom: 6px; }
+    .contact a { color: var(--doré-foncé); font-weight: 600; }
+    .contact a:hover { text-decoration: underline; }
+
+    /* Pied de page */
+    footer {
+      background: var(--bleu-foncé);
+      color: var(--blanc);
+      padding: 40px 0 26px;
+      text-align: center;
+    }
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .footer-logo svg { width: 28px; height: 28px; }
+    .footer-copyright {
+      color: var(--doré);
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+    .footer-liens {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .footer-liens a { color: var(--doré); transition: color 0.2s; }
+    .footer-liens a:hover { color: var(--blanc); }
+
+    /* Media queries */
+    @media (max-width: 960px) {
+      .accueil-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+      }
+      .accueil-texte h1 { font-size: 2.4rem; }
+      .accueil-texte .slogan { font-size: 1.15rem; }
+      .pain-géant { width: 320px; height: 320px; order: -1; }
+      .infos-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .burger { display: flex; }
+      nav ul {
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--blanc);
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 0;
+        border-bottom: 2px solid var(--doré);
+        transform: translateY(-120%);
+        transition: transform 0.3s ease;
+        gap: 18px;
+      }
+      nav ul ouvert { transform: translateY(0); }
+      .burger ouvert span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+      .burger ouvert span:nth-child(2) { opacity: 0; }
+      .burger ouvert span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+      .produits-grid { grid-template-columns: 1fr; }
+      #accueil { min-height: 100vh; padding-top: 90px; }
+      .pain-géant { width: 260px; height: 260px; }
+      section { padding: 60px 0; }
+      .section-titre h2 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- En-tête -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#accueil" class="brand">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M32 4C22 4 15 10 13 20L6 36L13 48L18 54L46 54L51 48L58 36L51 20C49 10 42 4 32 4Z" fill="#eebb44"/>
+          <path d="M32 4C36 12 36 24 32 34" stroke="#b57222" stroke-width="3" stroke-linecap="round"/>
+          <path d="M24 28C26 34 28 38 32 42" stroke="#b57222" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        La Fournée du Coin
+      </a>
+      <nav>
+        <ul id="menu">
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#produits">Nos produits</a></li>
+          <li><a href="#horaires">Horaires & adresse</a></li>
+        </ul>
+      </nav>
+      <div class="nav-right">
+        <div class="panier" id="panier" aria-label="Panier">
+          Panier <span id="badge" class="badge">0</span>
+        </div>
+        <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section accueil -->
+  <section id="accueil">
+    <div class="container accueil-content">
+      <div class="accueil-texte">
+        <h1>Boulangerie artisanale, faites maison, chaque matin</h1>
+        <p class="slogan">Du pain cuit au feu de bois, des viennoiseries au pur beurre et des douceurs qui sentent la maison.</p>
+        <a href="#produits" class="btn">Découvrir nos produits</a>
+      </div>
+      <div class="accueil-illustration">
+        <div class="pain-géant" aria-hidden="true">
+          <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="croustillant" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#eebb44"/>
+                <stop offset="100%" stop-color="#b57222"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="210" cy="235" rx="150" ry="130" fill="url(#croustillant)"/>
+            <path d="M100 170C140 120 290 120 320 170L210 360L100 170Z" fill="#d98e33"/>
+            <path d="M155 145C175 118 245 118 265 145L210 320L155 145Z" fill="#eebb44"/>
+            <path d="M180 165C190 152 230 152 240 165L210 290L180 165Z" fill="#f0c45e"/>
+            <ellipse cx="210" cy="355" rx="140" ry="40" fill="#7a3f14" opacity="0.25"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section produits -->
+  <section id="produits">
+    <div class="container">
+      <div class="section-titre">
+        <span class="ligné"></span>
+        <h2>Nos produits</h2>
+        <p>Faits main, cuits à la bonne heure, avec de la farine locale.</p>
+      </div>
+      <div class="produits-grid" id="produits-grid">
+        <!-- 6 produits -->
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 40C12 24 22 14 40 14C58 14 68 24 68 40L40 74L12 40Z" fill="#eebb44"/>
+              <path d="M28 32C34 24 46 24 52 32L40 60L28 32Z" fill="#d98e33"/>
+              <path d="M35 36C38 32 42 32 45 36L40 52L35 36Z" fill="#f0c45e"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Baguette tradition</h3>
+            <p class="produit-desc">Croustillante à souhait, mie alvéolée, levain naturel et temps de fermentation long.</p>
+            <div class="produit-prix">1,60 €</div>
+            <button class="ajout" data-nom="Baguette tradition" data-prix="1.60">Ajouter au panier</button>
+          </div>
+        </article>
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="24" fill="#eebb44"/>
+              <path d="M40 16C40 16 52 24 52 36C52 48 40 56 40 56" stroke="#d98e33" stroke-width="3" stroke-linecap="round"/>
+              <path d="M40 16C40 16 28 24 28 36C28 48 40 56 40 56" stroke="#d98e33" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="40" cy="58" r="2" fill="#8a4b14"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Pain de campagne</h3>
+            <p class="produit-desc">Miche rustique au son et aux pépins de tournesol, idéale pour le pain perdu.</p>
+            <div class="produit-prix">4,20 €</div>
+            <button class="ajout" data-nom="Pain de campagne" data-prix="4.20">Ajouter au panier</button>
+          </div>
+        </article>
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 52L28 18L40 24L52 18L60 52H20Z" fill="#eebb44"/>
+              <path d="M28 18L40 24L52 18" stroke="#d98e33" stroke-width="2.5" stroke-linecap="round"/>
+              <ellipse cx="40" cy="34" rx="10" ry="16" fill="#d98e33"/>
+              <circle cx="34" cy="30" r="3" fill="#7a4a14"/>
+              <circle cx="46" cy="30" r="3" fill="#7a4a14"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Croissant au beurre</h3>
+            <p class="produit-desc">Beurre demi-sel AOP, 27 couches relevées, doré à l'œuf frais.</p>
+            <div class="produit-prix">1,85 €</div>
+            <button class="ajout" data-nom="Croissant au beurre" data-prix="1.85">Ajouter au panier</button>
+          </div>
+        </article>
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="40" cy="48" rx="18" ry="12" fill="#7a4a14"/>
+              <path d="M24 36C24 24 32 18 40 18C48 18 56 24 56 36C56 50 40 58 40 58C40 58 24 50 24 36Z" fill="#d98e33"/>
+              <ellipse cx="40" cy="30" rx="6" ry="10" fill="#eebb44"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Pain au chocolat</h3>
+            <p class="produit-desc">Chocolat noir 70 %, double enroulement pour une dorure craquante.</p>
+            <div class="produit-prix">2,10 €</div>
+            <button class="ajout" data-nom="Pain au chocolat" data-prix="2.10">Ajouter au panier</button>
+          </div>
+        </article>
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="38" r="16" fill="#b57222"/>
+              <circle cx="40" cy="38" r="12" fill="#eebb44"/>
+              <circle cx="40" cy="38" r="8" fill="#d98e33"/>
+              <path d="M28 20L34 26" stroke="#8a4b14" stroke-width="2" stroke-linecap="round"/>
+              <path d="M46 20L52 26" stroke="#8a4b14" stroke-width="2" stroke-linecap="round"/>
+              <path d="M28 56L34 50" stroke="#8a4b14" stroke-width="2" stroke-linecap="round"/>
+              <path d="M46 56L52 50" stroke="#8a4b14" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Pretzels salés</h3>
+            <p class="produit-desc">Mains et sel de Guérande, cuits au sirop de malt, parfum d'anis.</p>
+            <div class="produit-prix">2,40 €</div>
+            <button class="ajout" data-nom="Pretzels salés" data-prix="2.40">Ajouter au panier</button>
+          </div>
+        </article>
+        <article class="produit">
+          <div class="produit-illustration">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="40" cy="32" rx="14" ry="10" fill="#d98e33"/>
+              <path d="M20 44L32 24L48 24L60 44C60 58 40 66 40 66C40 66 20 58 20 44Z" fill="#eebb44"/>
+              <circle cx="34" cy="28" r="2.5" fill="#6b3e12"/>
+              <circle cx="46" cy="28" r="2.5" fill="#6b3e12"/>
+              <circle cx="40" cy="38" r="2.5" fill="#6b3e12"/>
+            </svg>
+          </div>
+          <div class="produit-corps">
+            <h3 class="produit-titre">Pain aux noix</h3>
+            <p class="produit-desc">Farine de seigle, noix grillées et un soupçon de miel pour fondre au palais.</p>
+            <div class="produit-prix">5,00 €</div>
+            <button class="ajout" data-nom="Pain aux noix" data-prix="5.00">Ajouter au panier</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section horaires & adresse -->
+  <section id="horaires">
+    <div class="container">
+      <div class="section-titre">
+        <span class="ligné"></span>
+        <h2>Horaires & adresse</h2>
+        <p>Passez nous faire une bêtise, on vous attend avec le café chaud.</p>
+      </div>
+      <div class="infos-grid">
+        <div class="info-carte">
+          <div class="info-entete">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"/>
+            </svg>
+            <h3>Nos horaires</h3>
+          </div>
+          <table class="horaires-liste">
+            <tr><th>Jour</th><th>Heures</th></tr>
+            <tr><td>Lundi</td><td>Fermé</td></tr>
+            <tr><td>Mardi</td><td>06h30 – 19h30</td></tr>
+            <tr><td>Mercredi</td><td>06h30 – 19h30</td></tr>
+            <tr><td>Jeudi</td><td>06h30 – 20h00</td></tr>
+            <tr><td>Vendredi</td><td>06h30 – 20h00</td></tr>
+            <tr><td>Samedi</td><td>07h00 – 19h30</td></tr>
+            <tr><td>Dimanche</td><td>07h00 – 13h00</td></tr>
+          </table>
+        </div>
+        <div class="info-carte">
+          <div class="info-entete">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+            </svg>
+            <h3>L'atelier</h3>
+          </div>
+          <div class="adresse">
+            <p><strong>La Fournée du Coin</strong></p>
+            <p>12 rue des Meuniers</p>
+            <p>75011 Paris</p>
+          </div>
+          <div class="contact">
+            <p><a href="tel:+33140005050">01 40 00 50 50</a></p>
+            <p><a href="mailto:bonjour@lafourneeducoin.fr">bonjour@lafourneeducoin.fr</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pied de page -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M32 4C22 4 15 10 13 20L6 36L13 48L18 54L46 54L51 48L58 36L51 20C49 10 42 4 32 4Z" fill="#eebb44"/>
+          <path d="M32 4C36 12 36 24 32 34" stroke="#b57222" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        La Fournée du Coin
+      </div>
+      <p class="footer-copyright">© 2026 La Fournée du Coin — boulangerie artisanale, faites maison.</p>
+      <nav class="footer-liens">
+        <a href="#accueil">Accueil</a>
+        <a href="#produits">Nos produits</a>
+        <a href="#horaires">Horaires & adresse</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Menu mobile + panier : uniquement du JS interne, aucun chargement externe.
+    (function () {
+      var burger = document.getElementById('burger');
+      var menu = document.getElementById('menu');
+      var links = menu.querySelectorAll('a');
+      burger.addEventListener('click', function () {
+        var ouvert = menu.getAttribute('ouvert') === 'true';
+        menu.setAttribute('ouvert', !ouvert);
+        burger.setAttribute('aria-expanded', String(!ouvert));
+      });
+      links.forEach(function (a) {
+        a.addEventListener('click', function () {
+          menu.removeAttribute('ouvert');
+          burger.setAttribute('aria-expanded', 'false');
+        });
+      });
+      var badge = document.getElementById('badge');
+      var nb = 0;
+      document.getElementById('produits-grid').addEventListener('click', function (e) {
+        var btn = e.target;
+        if (!btn.classList.contains('ajout')) return;
+        nb += 1;
+        badge.textContent = nb;
+        badge.classList.add('visible');
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'article[]';
+        input.value = btn.dataset.nom;
+        // simulation d'ajout : on notifie simplement, pas de stockage
+        if (navigator.vibrate) navigator.vibrate(30);
+        btn.textContent = 'Ajouté';
+        btn.disabled = true;
+      });
+    })();
+  </script>
+</body>
+</html>
